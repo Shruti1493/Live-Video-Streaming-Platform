@@ -86,10 +86,8 @@ This project demonstrates a live video streaming solution using OBS Studio, NGIN
   
 
 ### 4. **Amazon S3 Storage**:
-   - Upload the `.ts` and `index.m3u8` files to an S3 bucket:
-     ```bash
-     aws s3 cp /path/to/output s3://<your-bucket-name>/  
-     ```
+   - Keep Uploading  `.ts` and `index.m3u8` files to an S3 bucket:
+     
    - Make the bucket publicly accessible for cors
 
 ### 5. **Serving the Stream to Clients**:
@@ -105,7 +103,7 @@ This project demonstrates a live video streaming solution using OBS Studio, NGIN
 - **FFMPEG**: For transcoding RTMP streams to HLS.
 - **Amazon S3**: For storing and serving HLS files.
 - **Amazon EC2**: For hosting the NGINX RTMP server and running FFMPEG.
-- **HTNL**: For serving the client side streaming.
+- **HTML**: For serving the client side streaming.
 
 ---
 
