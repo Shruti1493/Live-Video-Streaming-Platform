@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS Stream Player</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #333;
+            color: white;
+        }
+        video {
+            width: 80%;
+            max-width: 900px;
+            border: 5px solid #fff;
+            border-radius: 10px;
+            background-color: #000;
+        }
+        select {
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+            color: #333;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+    </style>
+</head> 
+<body>
+
+    <h1>Select Resolution</h1>
+    
+    <!-- Resolution dropdown -->
+    <select id="resolutionSelect">
+        <option value="240p">240p</option>
+        <option value="360p" selected>360p</option>
+      
+    </select>
+
+    <video id="video" controls></video>
+
+    <!-- Include the HLS.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        const video = document.getElementById('video');
+        const resolutionSelect = document.getElementById('resolutionSelect');
+
+        // Function to load the HLS stream based on resolution choice
+        function loadStream(resolution) {
+            const videoSrc = `https://caproject1.s3.ap-south-1.amazonaws.com/hls/${resolution}/index.m3u8`;
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        console.error("HLS.js Error:", data.type, data.details);
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Some browsers (Safari, iOS) natively support HLS
+                video.src = videoSrc;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            } else {
+                alert('Your browser does not support HLS streaming.');
+            }
+        }
+        
+
+        // Load the default resolution (360p)
+        loadStream(resolutionSelect.value);
+
+        // Update video source when resolution changes
+        resolutionSelect.addEventListener('change', function() {
+            loadStream(this.value);
+        });
+    </script>
+
+</body>
+</html>
